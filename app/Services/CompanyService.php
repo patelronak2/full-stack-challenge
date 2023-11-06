@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 class CompanyService
 {
+    public function createNewCompany(array $validated): Company
+    {
+        $company = new Company();
+        $this->setCompanyAttributes($company, $validated);
+        $company->save();
+
+        return $company;
+    }
+
     public function deleteCompanyAndPublishedJobs(string $id): void
     {
         $company = Company::findOrFail($id);
@@ -42,11 +51,11 @@ class CompanyService
 
     public function updateCompany(mixed $validated, Company $company): void
     {
-        $this->setJobAttributes($company, $validated);
+        $this->setCompanyAttributes($company, $validated);
         $company->save();
     }
 
-    private function setJobAttributes(Company $company, mixed $validated): void
+    private function setCompanyAttributes(Company $company, array $validated): void
     {
         $company->name = $validated['name'];
         $company->description = $validated['description'];

@@ -23,11 +23,15 @@ const editCompany = () => {
     form.patch(route('companies.update', props.company?.id));
 }
 
+const createCompany = () => {
+    form.post(route('companies.store'));
+};
+
 </script>
 
 <template>
     <section>
-        <form @submit.prevent="editCompany" class="mt-6 space-y-6">
+        <form @submit.prevent="props.company?.id ? editCompany() : createCompany()" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Title" />
 

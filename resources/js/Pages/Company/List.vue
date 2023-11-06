@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import Layout from "@/Layouts/Layout.vue";
 import { PropType } from "vue";
 import { Company } from "@/types";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     companies: {
@@ -17,7 +18,12 @@ defineProps({
 
     <Layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Companies</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Companies</h2>
+                <div>
+                    <PrimaryButton @click="router.get(route('companies.create'))">Create New Company</PrimaryButton>
+                </div>
+            </div>
         </template>
 
         <div class="pb-12 pt-6">

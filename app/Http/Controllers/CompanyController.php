@@ -29,12 +29,23 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
+        return Inertia::render('Company/Create');
     }
 
-    public function store(Request $request)
+    public function store(CompanyFormRequest $request)
     {
+        try {
+            $company = $this->companyService->createNewCompany($request->validated());
+
+            return redirect()->route('companies.index')->with(
+                'success',
+                sprintf("New Company: %s created successfully", $company->name)
+            );
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show(string $id): Response
