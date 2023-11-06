@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CompanyCollection;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CompanyController extends Controller
 {
+    public function __construct(private readonly CompanyService $companyService)
+    {
+    }
+
     public function index()
     {
-        return Inertia::render('Company/List');
+        $companies = $this->companyService->getCompaniesWithJobCount();
+
+        return Inertia::render('Company/List', [
+            'companies' => new CompanyCollection($companies)
+        ]);
     }
 
     public function create()
