@@ -26,6 +26,11 @@ class JobService
         return $job;
     }
 
+    public function deleteJob(Job $job): void
+    {
+        $job->delete();
+    }
+
     public function updateJob(array $validated, Job $job): void
     {
         $this->setJobAttributes($job, $validated);

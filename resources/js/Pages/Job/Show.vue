@@ -3,13 +3,41 @@ import { Head, router } from "@inertiajs/vue3";
 import Layout from "@/Layouts/Layout.vue";
 import { Job } from "@/types";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import { reactive } from "vue";
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
-defineProps({
+const props = defineProps({
     job: {
         type: Object as () => Job,
         required: true
     }
 });
+
+const state = reactive({
+    loader: false,
+    confirmingJobDeletion: false,
+})
+
+const openModal = () => {
+    state.confirmingJobDeletion = true;
+};
+
+const closeModal = () => {
+    state.confirmingJobDeletion = false;
+};
+
+const deleteJob = () => {
+    state.loader = true;
+    router.delete(route('jobs.destroy', props.job.id), {
+        onFinish: () => {
+            state.loader = false;
+            state.confirmingJobDeletion = false;
+        }
+    });
+};
+
 </script>
 
 <template>
@@ -26,6 +54,9 @@ defineProps({
                     >
                         Edit
                     </PrimaryButton>
+                    <DangerButton @click="openModal">
+                        Delete
+                    </DangerButton>
                 </div>
             </div>
 
@@ -74,5 +105,32 @@ defineProps({
                 </div>
             </div>
         </div>
+
+        <Modal :show="state.confirmingJobDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete Job: {{ job.title }}?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Once a Job is deleted, all of its data will be permanently deleted. Please
+                    confirm that you would like to permanently delete this Job.
+                </p>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': state.loader }"
+                        :disabled="state.loader"
+                        @click="deleteJob"
+                    >
+                        Confirm Deletion
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
+
     </Layout>
 </template>

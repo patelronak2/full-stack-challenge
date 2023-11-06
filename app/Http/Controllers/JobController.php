@@ -80,7 +80,16 @@ class JobController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Job $job): RedirectResponse
     {
+        try {
+            $this->jobService->deleteJob($job);
+
+            return redirect()->route('jobs.index')
+                ->with('success', sprintf('Job with id: %s deleted successfully', $job->id));
+        } catch (Exception $exception) {
+            return redirect()->route('companies.destroy', $job->id)
+                ->with('error', $exception->getMessage());
+        }
     }
 }
