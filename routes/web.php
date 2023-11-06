@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,14 +31,23 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/jobs', function () {
-    return Inertia::render('Job/List');
-})->name('jobs.index');
-
-Route::get('/jobs/{id}', function (){})
-    ->name('jobs.show')->whereUuid('id');
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/{job}', [JobController::class, 'show'])
+    ->name('jobs.show')->whereUuid('job');
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/jobs/create', [JobController::class, 'create'])
+        ->name('jobs.create');
+    Route::post('/jobs', [JobController::class, 'store'])
+        ->name('jobs.store');
+    Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])
+        ->name('jobs.edit')->whereUuid('job');
+    Route::patch('/jobs/{job}', [JobController::class, 'update'])
+        ->name('jobs.update')->whereUuid('job');
+    Route::delete('/jobs/{job}', [JobController::class, 'destroy'])
+        ->name('jobs.destroy')->whereUuid('job');
+
     Route::get('/companies', [CompanyController::class, 'index'])
         ->name('companies.index');
     Route::get('/companies/create', [CompanyController::class, 'create'])

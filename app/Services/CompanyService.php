@@ -39,6 +39,11 @@ class CompanyService
         }
     }
 
+    public function getAllCompanies(): Collection
+    {
+        return Company::all();
+    }
+
     public function getCompaniesWithJobCount(): Collection
     {
         return Company::withCount('jobs')->get();
