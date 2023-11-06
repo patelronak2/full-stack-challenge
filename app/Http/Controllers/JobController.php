@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\JobCollection;
+use App\Http\Resources\JobResource;
 use App\Models\Job;
 use App\Services\CompanyService;
 use App\Services\JobService;
@@ -34,8 +35,13 @@ class JobController extends Controller
     {
     }
 
-    public function show($id)
+    public function show(string $id): Response
     {
+        $job = $this->jobService->getDetailsForAJob($id);
+
+        return Inertia::render('Job/Show', [
+            'job' => new JobResource($job)
+        ]);
     }
 
     public function edit($id)
