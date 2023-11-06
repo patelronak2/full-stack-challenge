@@ -1,15 +1,41 @@
 <script setup lang="ts">
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import Layout from "@/Layouts/Layout.vue";
 import { Company } from "@/types";
-import { PropType } from "vue";
+import { PropType, reactive } from "vue";
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
-defineProps({
+const props = defineProps({
     company: {
         type: Object as PropType<Company>,
         required: true
     }
 });
+
+const state = reactive({
+    loader: false,
+    confirmingCompanyDeletion: false,
+})
+
+const openModal = () => {
+    state.confirmingCompanyDeletion = true;
+};
+
+const deleteCompany = () => {
+    state.loader = true;
+    router.delete(route('companies.destroy', props.company.id), {
+        onFinish: () => {
+            state.loader = false;
+            state.confirmingCompanyDeletion = false;
+        }
+    });
+};
+
+const closeModal = () => {
+    state.confirmingCompanyDeletion = false;
+};
 </script>
 
 <template>
@@ -17,7 +43,12 @@ defineProps({
 
     <Layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ company.name }} (#{{ company.id }})</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ company.name }} (#{{ company.id }})</h2>
+                <div>
+                    <DangerButton @click="openModal">Delete</DangerButton>
+                </div>
+            </div>
         </template>
 
         <div class="pb-12 pt-6">
@@ -100,5 +131,31 @@ defineProps({
                 </div>
             </div>
         </div>
+
+        <Modal :show="state.confirmingCompanyDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete {{ company.name }}?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Once a company is deleted, all of its data and published jobs will be permanently deleted. Please
+                    confirm that you would like to permanently delete this company.
+                </p>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': state.loader }"
+                        :disabled="state.loader"
+                        @click="deleteCompany"
+                    >
+                        Confirm Deletion
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
     </Layout>
 </template>

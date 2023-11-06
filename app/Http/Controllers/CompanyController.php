@@ -6,6 +6,8 @@ use App\Http\Resources\CompanyCollection;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobResource;
 use App\Services\CompanyService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,7 +52,16 @@ class CompanyController extends Controller
     {
     }
 
-    public function destroy($id)
+    public function destroy(string $id): RedirectResponse
     {
+        try {
+            $this->companyService->deleteCompanyAndPublishedJobs($id);
+
+            return redirect()->route('companies.index')
+                ->with('success', sprintf('Company with id: %s and published jobs deleted successfully', $id));
+        } catch (Exception $exception) {
+            return redirect()->route('companies.destroy', $id)
+                ->with('error', $exception->getMessage());
+        }
     }
 }
