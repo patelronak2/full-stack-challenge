@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import Layout from "@/Layouts/Layout.vue";
 import { PropType } from "vue";
 import { Job } from "@/types";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     jobs: {
@@ -11,14 +12,25 @@ defineProps({
     }
 });
 
+const redirectToCreate = () => {
+    router.get(route('jobs.create'));
+}
+
 </script>
 
 <template>
-    <Head title="Dashboard"/>
+    <Head title="Jobs List"/>
 
     <Layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Jobs</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Jobs</h2>
+                <div v-if="$page.props.auth.user">
+                    <PrimaryButton @click="redirectToCreate">
+                        Create New Job
+                    </PrimaryButton>
+                </div>
+            </div>
         </template>
 
         <div class="pb-12 pt-6">

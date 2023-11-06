@@ -2,6 +2,7 @@
 import { Head, router } from "@inertiajs/vue3";
 import Layout from "@/Layouts/Layout.vue";
 import { Job } from "@/types";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     job: {
@@ -12,12 +13,20 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Jobs"/>
+    <Head title="Job"/>
 
     <Layout>
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ job.title }} (#{{ job.id }})</h2>
+                <div v-if="$page.props.auth.user">
+                    <PrimaryButton
+                        class="mr-2"
+                        @click="router.get(route('jobs.edit', job.id))"
+                    >
+                        Edit
+                    </PrimaryButton>
+                </div>
             </div>
 
         </template>
