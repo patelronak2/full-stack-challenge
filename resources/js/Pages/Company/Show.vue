@@ -112,7 +112,7 @@ const closeModal = () => {
                                         {{ job.position_type }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ job.salary_min / 100 }} - {{ job.salary_max / 100 }} CAD
+                                        {{ job.salary_min }} - {{ job.salary_max }} CAD
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ job.location ?? 'N/A' }}

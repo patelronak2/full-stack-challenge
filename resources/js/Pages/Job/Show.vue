@@ -91,7 +91,7 @@ const deleteJob = () => {
                         </p>
                         <h2 class="text-lg font-medium text-gray-900 mt-2">Salary Range</h2>
                         <p class="mt-1 text-md text-gray-600">
-                            {{ job.salary_min/100 }} - {{ job.salary_max/100 }} CAD
+                            {{ job.salary_min }} - {{ job.salary_max }} CAD
                         </p>
                         <h2 class="text-lg font-medium text-gray-900 mt-2">Job Location</h2>
                         <p

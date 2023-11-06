@@ -21,8 +21,8 @@ const props = defineProps({
 const form = useForm({
     title: props.job?.title ?? "",
     description: props.job?.description ?? "",
-    salary_min: props.job ? props.job.salary_min / 100 : null,
-    salary_max: props.job ? props.job.salary_max / 100 : null,
+    salary_min: props.job ? props.job.salary_min : null,
+    salary_max: props.job ? props.job.salary_max : null,
     location: props.job?.location ?? "",
     position_type: props.job?.position_type ?? "in-person",
     company_id: props.job?.company_id ?? ""

@@ -24,10 +24,13 @@ class JobController extends Controller
     {
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $jobs = $this->jobService->getFilteredJobs($request);
+
         return Inertia::render('Job/List', [
-            'jobs' => new JobCollection(Job::with('company')->orderByDesc('created_at')->get())
+            'jobs'      => new JobCollection($jobs),
+            'companies' => new CompanyCollection($this->companyService->getAllCompanies())
         ]);
     }
 
@@ -75,7 +78,7 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         return Inertia::render('Job/Edit', [
-            'job' => new JobResource($job),
+            'job'       => new JobResource($job),
             'companies' => new CompanyCollection($this->companyService->getAllCompanies())
         ]);
     }
