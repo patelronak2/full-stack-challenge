@@ -6,6 +6,7 @@ import { PropType, reactive } from "vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({
     company: {
@@ -18,6 +19,10 @@ const state = reactive({
     loader: false,
     confirmingCompanyDeletion: false,
 })
+
+const redirectToEdit = () => {
+    router.get(route('companies.edit', props.company.id));
+}
 
 const openModal = () => {
     state.confirmingCompanyDeletion = true;
@@ -39,13 +44,15 @@ const closeModal = () => {
 </script>
 
 <template>
-    <Head title="Jobs"/>
+    <Head title="Company"/>
 
     <Layout>
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ company.name }} (#{{ company.id }})</h2>
                 <div>
+                    <PrimaryButton @click="redirectToEdit" class="mr-2">Edit</PrimaryButton>
+
                     <DangerButton @click="openModal">Delete</DangerButton>
                 </div>
             </div>

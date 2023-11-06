@@ -39,4 +39,16 @@ class CompanyService
     {
         return Company::with('jobs')->findOrFail($id);
     }
+
+    public function updateCompany(mixed $validated, Company $company): void
+    {
+        $this->setJobAttributes($company, $validated);
+        $company->save();
+    }
+
+    private function setJobAttributes(Company $company, mixed $validated): void
+    {
+        $company->name = $validated['name'];
+        $company->description = $validated['description'];
+    }
 }

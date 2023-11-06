@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanyFormRequest;
 use App\Http\Resources\CompanyCollection;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\JobResource;
+use App\Models\Company;
 use App\Services\CompanyService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -44,12 +46,22 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function edit(Company $company): Response
     {
+        return Inertia::render('Company/Edit', [
+            'company' => new CompanyResource($company)
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(CompanyFormRequest $request, Company $company)
     {
+        try {
+            $this->companyService->updateCompany($request->validated(), $company);
+
+            return back()->with('success', 'Company Updated successfully');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function destroy(string $id): RedirectResponse
