@@ -32,8 +32,10 @@ Route::get('/dashboard', function () {
 
 Route::get('/jobs', function () {
     return Inertia::render('Job/List');
-})
-    ->name('jobs.index');
+})->name('jobs.index');
+
+Route::get('/jobs/{id}', function (){})
+    ->name('jobs.show')->whereUuid('id');
 
 Route::middleware('auth')->group(function () {
     Route::get('/companies', [CompanyController::class, 'index'])
@@ -43,13 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/companies', [CompanyController::class, 'store'])
         ->name('companies.store');
     Route::get('/companies/{company}', [CompanyController::class, 'show'])
-        ->name('companies.show')->whereUuid('id');
+        ->name('companies.show')->whereUuid('company');
     Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])
-        ->name('companies.edit')->whereUuid('id');
+        ->name('companies.edit')->whereUuid('company');
     Route::patch('/companies/{company}', [CompanyController::class, 'update'])
-        ->name('companies.update')->whereUuid('id');
+        ->name('companies.update')->whereUuid('company');
     Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
-        ->name('companies.destroy')->whereUuid('id');
+        ->name('companies.destroy')->whereUuid('company');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CompanyCollection;
+use App\Http\Resources\CompanyResource;
+use App\Http\Resources\JobResource;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CompanyController extends Controller
 {
@@ -13,7 +16,7 @@ class CompanyController extends Controller
     {
     }
 
-    public function index()
+    public function index(): Response
     {
         $companies = $this->companyService->getCompaniesWithJobCount();
 
@@ -30,8 +33,13 @@ class CompanyController extends Controller
     {
     }
 
-    public function show($id)
+    public function show(string $id): Response
     {
+        $company = $this->companyService->getCompanyWithJobs($id);
+
+        return Inertia::render('Company/Show', [
+            'company' => new CompanyResource($company)
+        ]);
     }
 
     public function edit($id)
